@@ -1,0 +1,431 @@
+.notion-data-display {
+  background-color: var(--card-background);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.notion-data-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+}
+
+.notion-data-display:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.notion-data-display h3 {
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notion-data-display h3::before {
+  content: '📊';
+  font-size: 1.5rem;
+}
+
+.analysis-result {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.summary {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+.summary-label {
+  color: var(--text-color);
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+.meta {
+  margin-top: -1rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.aggregation-card {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 0.9rem;
+  background-color: rgba(59, 130, 246, 0.04);
+}
+
+.aggregation-total {
+  font-size: 0.95rem;
+  color: var(--text-color);
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+.chart-placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.chart-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chart-label {
+  width: 80px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.chart-bar-container {
+  flex: 1;
+  height: 12px;
+  background-color: var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.chart-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  border-radius: 6px;
+  transition: width 1s ease-in-out;
+  position: relative;
+}
+
+.chart-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.chart-value {
+  width: 130px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-align: right;
+}
+
+.notion-table {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.notion-table-header,
+.notion-table-row {
+  display: grid;
+  grid-template-columns: 140px 150px 1fr;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem 0.9rem;
+}
+
+.notion-table-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: rgba(59, 130, 246, 0.06);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.notion-table-body {
+  max-height: 420px;
+  overflow: auto;
+}
+
+.notion-table-row {
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.notion-table-row:hover {
+  background-color: rgba(59, 130, 246, 0.04);
+}
+
+.col {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.col-amount {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.notion-table-footer {
+  padding: 0.75rem 0.9rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* --- 预算 --- */
+.budget-card {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 0.9rem;
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.budget-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+.budget-settings-btn {
+  font-size: 0.85rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--card-background);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.budget-settings-btn:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--primary-color);
+}
+
+.budget-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.budget-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.budget-category {
+  width: 72px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.budget-bar-wrap {
+  flex: 1;
+  height: 10px;
+  background: var(--border-color);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.budget-bar {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.4s ease;
+}
+
+.budget-status-ok .budget-bar {
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+.budget-status-warning .budget-bar {
+  background: linear-gradient(90deg, #eab308, #facc15);
+}
+
+.budget-status-over .budget-bar {
+  background: linear-gradient(90deg, #dc2626, #ef4444);
+}
+
+.budget-values {
+  width: 140px;
+  text-align: right;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-status-warning .budget-values {
+  color: #b45309;
+}
+
+.budget-status-over .budget-values {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.budget-tip {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.budget-tip-label {
+  color: var(--text-color);
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+.budget-form-card {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  background: rgba(59, 130, 246, 0.04);
+}
+
+.budget-form-header {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+.budget-form-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.budget-form-row input[type='text'] {
+  flex: 1;
+  min-width: 0;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  font-size: 0.9rem;
+}
+
+.budget-form-row input[type='number'] {
+  width: 100px;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  font-size: 0.9rem;
+}
+
+.budget-form-remove {
+  font-size: 0.82rem;
+  padding: 0.35rem 0.5rem;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.budget-form-remove:hover {
+  color: #dc2626;
+}
+
+.budget-form-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.budget-form-actions button {
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--card-background);
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.budget-form-actions button:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.budget-form-actions button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .notion-data-display {
+    padding: 1.5rem;
+  }
+
+  .budget-item {
+    flex-wrap: wrap;
+  }
+
+  .budget-category {
+    width: 100%;
+  }
+
+  .budget-values {
+    width: 100%;
+    text-align: left;
+  }
+
+  .budget-form-row {
+    flex-wrap: wrap;
+  }
+
+  .budget-form-row input[type='number'] {
+    width: 80px;
+  }
+
+  .chart-label {
+    width: 60px;
+    font-size: 0.8rem;
+  }
+
+  .chart-value {
+    width: 110px;
+    font-size: 0.8rem;
+  }
+
+  .notion-table-header,
+  .notion-table-row {
+    grid-template-columns: 110px 120px 1fr;
+  }
+}

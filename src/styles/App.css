@@ -1,0 +1,86 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  position: relative;
+}
+
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.dashboard h2 {
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 2rem;
+  color: var(--text-color);
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.dashboard h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  border-radius: 3px;
+}
+
+.loading {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+  background-color: var(--card-background);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  margin: 2rem 0;
+  color: var(--text-secondary);
+}
+
+.footer {
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid var(--border-color);
+  margin-top: 3rem;
+  background-color: var(--card-background);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* 卡片容器 */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+  
+  .dashboard {
+    padding: 0.5rem;
+  }
+  
+  .dashboard h2 {
+    font-size: 1.5rem;
+  }
+  
+  .card-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}

@@ -1,0 +1,178 @@
+.interests-page {
+  padding: 2rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.interests-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.interests-header h2 {
+  font-size: 1.75rem;
+  color: var(--text-color);
+  margin: 0 0 0.25rem;
+}
+
+.interests-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #888);
+  margin: 0;
+}
+
+.interests-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.btn-refresh,
+.btn-force-refresh {
+  height: 36px;
+  padding: 0 1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-refresh:disabled,
+.btn-force-refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-refresh {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.btn-force-refresh {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.interests-error {
+  background: #fff3f3;
+  border: 1px solid #ffcccc;
+  color: #c0392b;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-close {
+  margin-left: 1rem;
+  opacity: 0.6;
+}
+
+/* 话题管理区 */
+.topic-manager {
+  background: var(--card-background);
+  border-radius: var(--border-radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.topic-add-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.topic-input {
+  flex: 1;
+  height: 36px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  background: var(--bg-color, #fff);
+  color: var(--text-color);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.topic-input:focus {
+  border-color: var(--primary-color);
+}
+
+.btn-add-topic {
+  height: 36px;
+  padding: 0 1rem;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.btn-add-topic:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.topic-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: 28px;
+  align-items: center;
+}
+
+.topic-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.7rem;
+  background: var(--primary-color, #4f8ef7)22;
+  color: var(--primary-color);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.topic-tag-del {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.5;
+  font-size: 0.75rem;
+  padding: 0;
+  line-height: 1;
+  transition: opacity 0.2s;
+}
+
+.topic-tag-del:hover {
+  opacity: 1;
+}
+
+.topic-empty {
+  font-size: 0.8125rem;
+  color: var(--text-secondary, #999);
+}
+
+/* 推荐列表 */
+.recommendations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}

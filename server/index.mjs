@@ -85,6 +85,22 @@ function getTodayDate() {
   return normalizeDate(new Date().toISOString());
 }
 
+function safeTitle(text, max = 120) {
+  return String(text || '').trim().slice(0, max) || 'Untitled';
+}
+
+function safeRichText(text, max = 1800) {
+  return String(text || '').trim().slice(0, max);
+}
+
+function toRichTextArray(lines = []) {
+  return lines
+    .map((line) => safeRichText(line))
+    .filter(Boolean)
+    .slice(0, 50)
+    .map((content) => ({ type: 'text', text: { content } }));
+}
+
 /** 将分类字符串按逗号拆成多个分类（去空、trim） */
 function splitCategories(categoryStr) {
   if (!categoryStr || typeof categoryStr !== 'string') return ['未分类'];
@@ -181,6 +197,112 @@ function budgetStatus(percent) {
 
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true });
+});
+
+app.post('/api/notion/english-reading/sync', async (req, res) => {
+  try {
+    const notionKey = mustGetEnv('NOTION_API_KEY');
+    const databaseId = process.env.NOTION_ENGLISH_DATABASE_ID || process.env.NOTION_DATABASE_ID;
+    if (!databaseId) {
+      return res.status(400).json({
+        error: '缺少 NOTION_ENGLISH_DATABASE_ID（或 NOTION_DATABASE_ID）环境变量',
+      });
+    }
+
+    const payload = req.body ?? {};
+    const articleTitle = safeTitle(payload?.article?.title || payload?.articleTitle || 'English Reading');
+    const articleSource = safeRichText(payload?.article?.source || payload?.articleSource || '');
+    const articleLevel = safeRichText(payload?.article?.level || payload?.level || '');
+    const articleDate = normalizeDate(payload?.article?.publishedAt || payload?.publishedAt || getTodayDate());
+    const articleSummary = safeRichText(payload?.article?.summary || payload?.summary || '');
+    const tags = Array.isArray(payload?.tags) ? payload.tags.map((item) => ({ name: String(item) })) : [];
+    const words = Array.isArray(payload?.savedWords) ? payload.savedWords : [];
+    const sentences = Array.isArray(payload?.savedSentences) ? payload.savedSentences : [];
+    const deepReading = safeRichText(payload?.deepReading || '');
+
+    const notion = createNotionClient(notionKey);
+    const response = await notion.pages.create({
+      parent: { database_id: databaseId },
+      properties: {
+        Title: {
+          title: [{ type: 'text', text: { content: articleTitle } }],
+        },
+        Source: {
+          rich_text: articleSource ? [{ type: 'text', text: { content: articleSource } }] : [],
+        },
+        Level: {
+          rich_text: articleLevel ? [{ type: 'text', text: { content: articleLevel } }] : [],
+        },
+        Date: { date: { start: articleDate } },
+        Tags: {
+          multi_select: tags.slice(0, 20),
+        },
+      },
+      children: [
+        {
+          object: 'block',
+          type: 'heading_2',
+          heading_2: {
+            rich_text: [{ type: 'text', text: { content: 'Summary' } }],
+          },
+        },
+        {
+          object: 'block',
+          type: 'paragraph',
+          paragraph: {
+            rich_text: articleSummary ? [{ type: 'text', text: { content: articleSummary } }] : [],
+          },
+        },
+        {
+          object: 'block',
+          type: 'heading_2',
+          heading_2: {
+            rich_text: [{ type: 'text', text: { content: 'Saved Words' } }],
+          },
+        },
+        {
+          object: 'block',
+          type: 'bulleted_list_item',
+          bulleted_list_item: {
+            rich_text: toRichTextArray(words.length ? words : ['(none)']),
+          },
+        },
+        {
+          object: 'block',
+          type: 'heading_2',
+          heading_2: {
+            rich_text: [{ type: 'text', text: { content: 'Saved Sentences' } }],
+          },
+        },
+        ...sentences.slice(0, 30).map((sentence) => ({
+          object: 'block',
+          type: 'bulleted_list_item',
+          bulleted_list_item: {
+            rich_text: [{ type: 'text', text: { content: safeRichText(sentence) } }],
+          },
+        })),
+        {
+          object: 'block',
+          type: 'heading_2',
+          heading_2: {
+            rich_text: [{ type: 'text', text: { content: 'AI Deep Reading' } }],
+          },
+        },
+        {
+          object: 'block',
+          type: 'paragraph',
+          paragraph: {
+            rich_text: deepReading ? [{ type: 'text', text: { content: deepReading } }] : [],
+          },
+        },
+      ],
+    });
+
+    res.json({ ok: true, pageId: response?.id });
+  } catch (e) {
+    const detail = e?.body ?? e?.message ?? String(e);
+    res.status(500).json({ error: '同步到 Notion 失败', detail });
+  }
 });
 
 app.post('/api/notion/query-ledger', async (req, res) => {
@@ -452,4 +574,3 @@ function shutdown() {
 }
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
-

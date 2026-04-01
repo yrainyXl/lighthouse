@@ -271,6 +271,78 @@ export function deleteTopic(id) {
 
 // ── 文章缓存 ──────────────────────────────────────────────────────────────────
 
+// ── 账单聚合查询 ──────────────────────────────────────────────────────────────
+
+/** 返回指定月份列表各月的支出合计，months 为 ['2026-01','2026-02',...] */
+export function getMonthlyTotals(months) {
+  if (!months || months.length === 0) return [];
+  const placeholders = months.map(() => '?').join(',');
+  const rows = db
+    .prepare(
+      `SELECT substr(date, 1, 7) AS month, SUM(amount) AS total
+       FROM ledger_transaction
+       WHERE type != 'income' AND substr(date, 1, 7) IN (${placeholders})
+       GROUP BY month
+       ORDER BY month ASC`,
+    )
+    .all(...months);
+  return rows; // [{month:'2026-01', total:8500}, ...]
+}
+
+/** 返回指定月份内每天的支出合计 */
+export function getDailyTotals(month) {
+  const from = `${month}-01`;
+  // 计算该月最后一天
+  const [y, m] = month.split('-').map(Number);
+  const lastDay = new Date(y, m, 0).getDate();
+  const to = `${month}-${String(lastDay).padStart(2, '0')}`;
+  const rows = db
+    .prepare(
+      `SELECT date, SUM(amount) AS total
+       FROM ledger_transaction
+       WHERE type != 'income' AND date >= ? AND date <= ?
+       GROUP BY date
+       ORDER BY date ASC`,
+    )
+    .all(from, to);
+  return rows; // [{date:'2026-03-01', total:256}, ...]
+}
+
+/** 返回指定月份各分类的支出合计 */
+export function getCategoryTotals(month) {
+  const from = `${month}-01`;
+  const [y, m] = month.split('-').map(Number);
+  const lastDay = new Date(y, m, 0).getDate();
+  const to = `${month}-${String(lastDay).padStart(2, '0')}`;
+  const rows = db
+    .prepare(
+      `SELECT category, SUM(amount) AS total
+       FROM ledger_transaction
+       WHERE type != 'income' AND date >= ? AND date <= ?
+       GROUP BY category
+       ORDER BY total DESC`,
+    )
+    .all(from, to);
+  return rows; // [{category:'餐饮', total:3200}, ...]
+}
+
+/** 返回指定月份的交易明细列表（最新50条） */
+export function getTransactionsByMonth(month) {
+  const from = `${month}-01`;
+  const [y, m] = month.split('-').map(Number);
+  const lastDay = new Date(y, m, 0).getDate();
+  const to = `${month}-${String(lastDay).padStart(2, '0')}`;
+  return db
+    .prepare(
+      `SELECT id, date, type, category, payee, amount, currency, note
+       FROM ledger_transaction
+       WHERE date >= ? AND date <= ?
+       ORDER BY date DESC
+       LIMIT 50`,
+    )
+    .all(from, to);
+}
+
 export function getArticleCache(topic, date) {
   return db
     .prepare(`SELECT articles_json, ai_insight FROM article_cache WHERE topic = ? AND date = ?`)

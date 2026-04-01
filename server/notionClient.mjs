@@ -12,10 +12,13 @@ export function createNotionClient(apiKey) {
  */
 export async function queryDatabase(client, databaseId, filter) {
   const pages = [];
-  for await (const page of iteratePaginatedAPI(client.databases.query.bind(client.databases), {
-    database_id: databaseId,
-    ...(filter ? { filter } : {}),
-  })) {
+  for await (const page of iteratePaginatedAPI(
+    (args) => client.databases.query(args),
+    {
+      database_id: databaseId,
+      ...(filter ? { filter } : {}),
+    }
+  )) {
     pages.push(page);
   }
   return pages;

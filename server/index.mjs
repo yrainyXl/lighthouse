@@ -15,6 +15,10 @@ import {
   getLatestTransactionCreatedAtByDate,
   getBudgetRules,
   saveBudgetRules,
+  getMonthlyTotals,
+  getDailyTotals,
+  getCategoryTotals,
+  getTransactionsByMonth,
 } from './db.mjs';
 import { analyzeLedgerWithAi, getBudgetTip, generateTopicInsight } from './siliconflowClient.mjs';
 import { createNotionClient, queryDatabase } from './notionClient.mjs';
@@ -302,6 +306,51 @@ app.get('/api/ledger/budget-status', async (req, res) => {
     }
 
     res.json({ budgets, budgetTip });
+  } catch (e) {
+    res.status(500).json({ error: String(e?.message || e) });
+  }
+});
+
+app.get('/api/ledger/bills-stats', (req, res) => {
+  try {
+    const { from, to } = req.query;
+    if (!from || !to) {
+      return res.status(400).json({ error: 'from and to query params are required (YYYY-MM)' });
+    }
+    // 生成从 from 到 to 的月份列表
+    const months = [];
+    const [fy, fm] = from.split('-').map(Number);
+    const [ty, tm] = to.split('-').map(Number);
+    let cy = fy, cm = fm;
+    while (cy < ty || (cy === ty && cm <= tm)) {
+      months.push(`${cy}-${String(cm).padStart(2, '0')}`);
+      cm++;
+      if (cm > 12) { cm = 1; cy++; }
+    }
+    // 月度汇总
+    const monthlyRaw = getMonthlyTotals(months);
+    const monthly = months.map((ym) => {
+      const found = monthlyRaw.find((r) => r.month === ym);
+      return { month: ym.slice(5).replace(/^0/, '') + '月', yearMonth: ym, amount: found?.total ?? 0 };
+    });
+    // 当前月（to）的每日趋势
+    const daily = getDailyTotals(to).map((r) => ({
+      date: r.date.slice(5).replace('-', '/'),
+      amount: r.total,
+    }));
+    // 当前月（to）的分类汇总
+    const CATEGORY_COLORS = [
+      '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444',
+      '#ec4899', '#14b8a6', '#f97316', '#6366f1', '#6b7280',
+    ];
+    const byCategory = getCategoryTotals(to).map((r, i) => ({
+      name: r.category || '其他',
+      value: r.total,
+      color: CATEGORY_COLORS[i % CATEGORY_COLORS.length],
+    }));
+    // 当前月交易明细
+    const transactions = getTransactionsByMonth(to);
+    res.json({ monthly, daily, byCategory, transactions });
   } catch (e) {
     res.status(500).json({ error: String(e?.message || e) });
   }

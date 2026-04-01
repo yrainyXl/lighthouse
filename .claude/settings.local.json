@@ -11,7 +11,8 @@
       "Bash(curl -s https://home.lumor-lab.top/api/notion/query-ledger -X POST -H 'Content-Type: application/json' -d '{\"\"\"\"month\"\"\"\":\"\"\"\"2026-03\"\"\"\"}')",
       "Bash(find /Users/EDY -maxdepth 5 -name *.ts -path */notion*)",
       "Bash(npm show:*)",
-      "Bash(node -e \"const v=JSON.parse\\(require\\(''''fs''''\\).readFileSync\\(''''/dev/stdin'''',''''utf8''''\\)\\); console.log\\(v.filter\\(x=>x.startsWith\\(''''2.''''\\)\\).slice\\(-5\\).join\\(''''\\\\n''''\\)\\)\")"
+      "Bash(node -e \"const v=JSON.parse\\(require\\(''''fs''''\\).readFileSync\\(''''/dev/stdin'''',''''utf8''''\\)\\); console.log\\(v.filter\\(x=>x.startsWith\\(''''2.''''\\)\\).slice\\(-5\\).join\\(''''\\\\n''''\\)\\)\")",
+      "Bash(npm run:*)"
     ]
   }
 }

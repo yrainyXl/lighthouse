@@ -277,11 +277,36 @@ export function Bills() {
 
   return (
     <div className="space-y-4">
-      <section>
-        <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
-          账单统计
-        </h2>
-        <p className="mt-1 text-sm text-slate-500">看支出、分类和趋势。</p>
+      <section className="overflow-hidden rounded-[32px] bg-gradient-to-br from-slate-950 via-emerald-950 to-teal-900 p-5 text-white shadow-[0_30px_70px_-36px_rgba(15,23,42,0.72)]">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm text-emerald-200">账单统计</p>
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight">单日先看，趋势补充</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-300">
+              默认打开当天数据，图表和预算都保留，但信息层次更偏手机端。
+            </p>
+          </div>
+          <div className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-white">
+            {getRangeLabel(effectiveRange)}
+          </div>
+        </div>
+
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          <div className="rounded-2xl bg-white/10 p-4 backdrop-blur">
+            <p className="text-xs uppercase tracking-[0.18em] text-emerald-200">
+              总支出
+            </p>
+            <p className="mt-2 text-2xl font-semibold">
+              {formatCurrency(totalSpent)}
+            </p>
+          </div>
+          <div className="rounded-2xl bg-white/10 p-4 backdrop-blur">
+            <p className="text-xs uppercase tracking-[0.18em] text-emerald-200">
+              交易数
+            </p>
+            <p className="mt-2 text-2xl font-semibold">{transactions.length}</p>
+          </div>
+        </div>
       </section>
 
       {error && (
@@ -290,7 +315,7 @@ export function Bills() {
         </div>
       )}
 
-      <Card className="border-slate-200 bg-white shadow-sm">
+      <Card className="border-white/70 bg-white/88 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.28)]">
         <CardContent className="space-y-3 p-4">
           <div className="flex flex-wrap gap-2">
             {(
@@ -387,7 +412,7 @@ export function Bills() {
       </Card>
 
       <div className="grid grid-cols-2 gap-3">
-        <Card className="border-slate-200 bg-white shadow-sm">
+        <Card className="border-sky-100 bg-gradient-to-br from-white via-sky-50 to-cyan-50 shadow-[0_18px_36px_-30px_rgba(14,165,233,0.35)]">
           <CardContent className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -401,7 +426,7 @@ export function Bills() {
           </CardContent>
         </Card>
 
-        <Card className="border-slate-200 bg-white shadow-sm">
+        <Card className="border-emerald-100 bg-gradient-to-br from-white via-emerald-50 to-teal-50 shadow-[0_18px_36px_-30px_rgba(16,185,129,0.35)]">
           <CardContent className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -423,7 +448,7 @@ export function Bills() {
       </div>
 
       <Tabs defaultValue="overview" className="gap-4">
-        <TabsList className="h-auto w-full justify-start rounded-2xl bg-white p-1">
+        <TabsList className="h-auto w-full justify-start rounded-2xl bg-white/85 p-1 shadow-sm">
           <TabsTrigger value="overview" className="flex-none rounded-xl px-4">
             概览
           </TabsTrigger>
@@ -436,7 +461,7 @@ export function Bills() {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-3">
-          <Card className="border-slate-200 bg-white shadow-sm">
+          <Card className="border-white/70 bg-white/88 shadow-[0_18px_36px_-30px_rgba(15,23,42,0.24)]">
             <CardContent className="space-y-3 p-4">
               <p className="text-sm text-slate-500">{getRangeLabel(effectiveRange)}</p>
               {loading ? (
@@ -451,7 +476,68 @@ export function Bills() {
             </CardContent>
           </Card>
 
-          <Card className="border-slate-200 bg-white shadow-sm">
+          {(stats?.daily.length || stats?.monthly.length) && (
+            <Card className="border-white/70 bg-white/88 shadow-[0_18px_36px_-30px_rgba(15,23,42,0.24)]">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">
+                  {viewMode === "day" || viewMode === "week" ? "本月趋势" : "近月趋势"}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[200px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    {viewMode === "day" || viewMode === "week" ? (
+                      <LineChart
+                        data={stats?.daily ?? []}
+                        margin={{ top: 8, right: 8, left: -20, bottom: 0 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                        <XAxis
+                          dataKey="date"
+                          tick={{ fill: "#64748b", fontSize: 11 }}
+                        />
+                        <YAxis tick={{ fill: "#64748b", fontSize: 11 }} />
+                        <Tooltip
+                          formatter={(value: number) => [
+                            formatCurrency(value),
+                            "支出",
+                          ]}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="amount"
+                          stroke="#0f172a"
+                          strokeWidth={2}
+                          dot={false}
+                        />
+                      </LineChart>
+                    ) : (
+                      <BarChart
+                        data={stats?.monthly ?? []}
+                        margin={{ top: 8, right: 8, left: -16, bottom: 0 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                        <XAxis
+                          dataKey="month"
+                          tick={{ fill: "#64748b", fontSize: 11 }}
+                        />
+                        <YAxis tick={{ fill: "#64748b", fontSize: 11 }} />
+                        <Tooltip
+                          formatter={(value: number) => [
+                            formatCurrency(value),
+                            "支出",
+                          ]}
+                        />
+                        <Bar dataKey="amount" fill="#0f172a" radius={[8, 8, 0, 0]} />
+                      </BarChart>
+                    )}
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          <Card className="border-white/70 bg-white/88 shadow-[0_18px_36px_-30px_rgba(15,23,42,0.24)]">
             <CardHeader className="pb-3">
               <CardTitle className="text-base">分类</CardTitle>
             </CardHeader>
@@ -488,7 +574,7 @@ export function Bills() {
           </Card>
 
           {viewMode === "month" && (
-            <Card className="border-slate-200 bg-white shadow-sm">
+            <Card className="border-white/70 bg-white/88 shadow-[0_18px_36px_-30px_rgba(15,23,42,0.24)]">
               <CardHeader className="flex flex-row items-center justify-between gap-3 pb-3">
                 <CardTitle className="text-base">预算</CardTitle>
                 <Button variant="outline" size="sm" onClick={beginBudgetEdit}>
@@ -582,7 +668,7 @@ export function Bills() {
         </TabsContent>
 
         <TabsContent value="trend" className="space-y-3">
-          <Card className="border-slate-200 bg-white shadow-sm">
+          <Card className="border-white/70 bg-white/88 shadow-[0_18px_36px_-30px_rgba(15,23,42,0.24)]">
             <CardHeader className="pb-3">
               <CardTitle className="text-base">每日趋势</CardTitle>
             </CardHeader>
@@ -619,7 +705,7 @@ export function Bills() {
             </CardContent>
           </Card>
 
-          <Card className="border-slate-200 bg-white shadow-sm">
+          <Card className="border-white/70 bg-white/88 shadow-[0_18px_36px_-30px_rgba(15,23,42,0.24)]">
             <CardHeader className="pb-3">
               <CardTitle className="text-base">月度趋势</CardTitle>
             </CardHeader>
@@ -652,7 +738,7 @@ export function Bills() {
         </TabsContent>
 
         <TabsContent value="transactions">
-          <Card className="border-slate-200 bg-white shadow-sm">
+          <Card className="border-white/70 bg-white/88 shadow-[0_18px_36px_-30px_rgba(15,23,42,0.24)]">
             <CardContent className="space-y-3 p-4">
               {transactions.length === 0 ? (
                 <p className="text-sm text-slate-500">当前范围没有账单明细。</p>

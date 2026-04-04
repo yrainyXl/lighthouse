@@ -1,130 +1,189 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { Receipt, BookOpen, Library, ArrowRight, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  Brain,
+  Languages,
+  Library,
+  Receipt,
+  Sparkles,
+} from "lucide-react";
 import { Link } from "react-router";
+import { Card, CardContent } from "../components/ui/card";
+import { Badge } from "../components/ui/badge";
 
 export function Dashboard() {
-  const features = [
+  const modules = [
     {
       title: "账单统计",
-      description: "记录和分析你的消费数据，从 Notion 同步账单信息，查看支出趋势和分类统计",
+      description: "保留真实账单同步和分析能力，同时把图表改造成桌面/手机都能读的结构。",
       icon: Receipt,
-      color: "text-red-600",
-      bgColor: "bg-red-50",
+      accent: "text-rose-700",
+      surface: "bg-rose-100",
       link: "/bills",
-      gradient: "from-red-50 to-orange-50",
+      badge: "真实数据",
     },
     {
       title: "文章推荐",
-      description: "记录学习文章，AI 自动提取摘要和学习建议，整理到 Notion 知识库",
+      description: "沿用旧版兴趣聚合的数据流，用新壳层统一话题、刷新和 AI 洞察体验。",
       icon: BookOpen,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
+      accent: "text-sky-700",
+      surface: "bg-sky-100",
       link: "/articles",
-      gradient: "from-blue-50 to-cyan-50",
+      badge: "兴趣聚合",
     },
     {
       title: "知识库",
-      description: "浏览和搜索整理好的知识内容，支持分类筛选和全文检索",
+      description: "先统一 UI 和信息架构，再把知识内容的数据适配边界独立出来。",
       icon: Library,
-      color: "text-green-600",
-      bgColor: "bg-green-50",
+      accent: "text-emerald-700",
+      surface: "bg-emerald-100",
       link: "/knowledge",
-      gradient: "from-green-50 to-emerald-50",
+      badge: "结构整理",
+    },
+    {
+      title: "英语阅读",
+      description: "并入 remote 的英语阅读能力，把词句收藏、AI 精读和 Notion 同步放到统一入口。",
+      icon: Languages,
+      accent: "text-violet-700",
+      surface: "bg-violet-100",
+      link: "/english-reading",
+      badge: "Remote 对齐",
+    },
+    {
+      title: "统一工作台",
+      description: "旧 UI 风格重建后的首页，用更轻的结构串起桌面端和移动端的全部模块。",
+      icon: Sparkles,
+      accent: "text-amber-700",
+      surface: "bg-amber-100",
+      link: "/",
+      badge: "响应式壳",
     },
   ];
 
   return (
-    <div className="space-y-12">
-      {/* Welcome Section */}
-      <div className="text-center max-w-3xl mx-auto space-y-4">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 mb-4">
-          <Library className="w-8 h-8 text-white" />
-        </div>
-        <h2 className="text-4xl font-semibold text-gray-900">欢迎来到你的知识库</h2>
-        <p className="text-lg text-gray-600">
-          一个与 Notion 集成的个人学习和管理平台，帮助你记录生活、整理知识、持续成长
-        </p>
-      </div>
+    <div className="space-y-8">
+      <section className="rounded-[32px] bg-slate-950 px-6 py-8 text-white shadow-[0_30px_80px_-45px_rgba(15,23,42,0.85)] sm:px-8">
+        <div className="grid gap-8 lg:grid-cols-[1.45fr_0.95fr]">
+          <div>
+            <Badge className="rounded-full bg-white/10 px-3 py-1 text-white hover:bg-white/10">
+              旧 UI 交互基底
+            </Badge>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">
+              用一套响应式界面收口所有能力
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
+              这次重构不再维护两棵 UI。桌面端保留数据密度，手机端改成更短路径的导航和更轻的图表信息层级。
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                to="/bills"
+                className="rounded-full bg-white px-5 py-3 text-sm font-medium text-slate-950 transition hover:bg-slate-100"
+              >
+                先看账单统计
+              </Link>
+              <Link
+                to="/english-reading"
+                className="rounded-full border border-white/15 px-5 py-3 text-sm font-medium text-white transition hover:bg-white/10"
+              >
+                进入英语阅读
+              </Link>
+            </div>
+          </div>
 
-      {/* Features Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        {features.map((feature) => {
-          const Icon = feature.icon;
+          <div className="grid gap-3 rounded-[28px] border border-white/10 bg-white/5 p-4 sm:grid-cols-2">
+            {[
+              { label: "应用树", value: "1 套", hint: "src/app 成为唯一入口" },
+              { label: "核心模块", value: "5 个", hint: "首页/账单/文章/知识/英语" },
+              { label: "移动优先", value: "已纳入", hint: "导航和图表都按窄屏重排" },
+              { label: "Remote 对齐", value: "进行中", hint: "英语阅读和后端同步并入中" },
+            ].map((item) => (
+              <div key={item.label} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p className="text-sm text-slate-300">{item.label}</p>
+                <p className="mt-2 text-2xl font-semibold">{item.value}</p>
+                <p className="mt-2 text-xs leading-5 text-slate-400">{item.hint}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {modules.map((module) => {
+          const Icon = module.icon;
           return (
-            <Link key={feature.title} to={feature.link} className="group">
-              <Card className={`h-full hover:shadow-xl transition-all duration-300 border-2 hover:border-gray-300 bg-gradient-to-br ${feature.gradient}`}>
-                <CardContent className="p-8 flex flex-col items-center text-center space-y-4">
-                  <div className={`p-4 rounded-2xl ${feature.bgColor} group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className={`w-8 h-8 ${feature.color}`} />
+            <Link key={module.title} to={module.link} className="group">
+              <Card className="h-full overflow-hidden border-white/70 bg-white/80 transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_-35px_rgba(15,23,42,0.35)]">
+                <CardContent className="flex h-full flex-col gap-5 p-6">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className={`flex h-14 w-14 items-center justify-center rounded-3xl ${module.surface}`}>
+                      <Icon className={`h-7 w-7 ${module.accent}`} />
+                    </div>
+                    <Badge variant="outline" className="rounded-full border-slate-200 bg-white/80">
+                      {module.badge}
+                    </Badge>
                   </div>
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-semibold text-gray-900">
-                      {feature.title}
+
+                  <div className="space-y-3">
+                    <h3 className="text-2xl font-semibold tracking-tight text-slate-950">
+                      {module.title}
                     </h3>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      {feature.description}
-                    </p>
+                    <p className="text-sm leading-7 text-slate-600">{module.description}</p>
                   </div>
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-700 group-hover:text-gray-900 pt-2">
-                    <span>进入</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+
+                  <div className="mt-auto flex items-center gap-2 text-sm font-medium text-slate-700">
+                    <span>进入模块</span>
+                    <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                   </div>
                 </CardContent>
               </Card>
             </Link>
           );
         })}
-      </div>
+      </section>
 
-      {/* Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
-          <CardHeader>
+      <section className="grid gap-5 lg:grid-cols-3">
+        <Card className="border-white/70 bg-white/80">
+          <CardContent className="p-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-purple-100">
-                <Sparkles className="w-5 h-5 text-purple-600" />
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-100">
+                <Sparkles className="h-5 w-5 text-violet-700" />
               </div>
-              <CardTitle className="text-lg">AI 智能助手</CardTitle>
+              <div>
+                <p className="font-semibold text-slate-950">真实能力优先</p>
+                <p className="text-sm text-slate-600">优先迁移旧 UI 里已经接通 API 的模块。</p>
+              </div>
             </div>
-          </CardHeader>
-          <CardContent>
-            <CardDescription className="text-gray-700">
-              文章推荐功能集成 AI 自动整理，帮你提取关键信息、生成学习建议，让知识管理更高效。
-            </CardDescription>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
-          <CardHeader>
+        <Card className="border-white/70 bg-white/80">
+          <CardContent className="p-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-100">
-                <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                </svg>
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100">
+                <Brain className="h-5 w-5 text-emerald-700" />
               </div>
-              <CardTitle className="text-lg">Notion 同步</CardTitle>
+              <div>
+                <p className="font-semibold text-slate-950">移动端重排</p>
+                <p className="text-sm text-slate-600">不把桌面图表硬压缩到手机，而是按信息层级重组。</p>
+              </div>
             </div>
-          </CardHeader>
-          <CardContent>
-            <CardDescription className="text-gray-700">
-              所有数据与 Notion 无缝同步，在这里记录，在 Notion 中编辑，让你的知识管理更加灵活。
-            </CardDescription>
           </CardContent>
         </Card>
-      </div>
 
-      {/* Getting Started */}
-      <Card className="max-w-4xl mx-auto bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200">
-        <CardContent className="p-8">
-          <div className="text-center space-y-4">
-            <h3 className="text-xl font-semibold text-gray-900">开始使用</h3>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              选择上方任意功能卡片进入对应模块，开始记录你的生活和知识。
-              所有数据都将通过 Notion API 进行同步和管理。
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+        <Card className="border-white/70 bg-white/80">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-100">
+                <Languages className="h-5 w-5 text-sky-700" />
+              </div>
+              <div>
+                <p className="font-semibold text-slate-950">Remote 并入</p>
+                <p className="text-sm text-slate-600">英语阅读会直接进入这棵 canonical app，不再挂双树。</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 }

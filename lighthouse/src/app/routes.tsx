@@ -3,6 +3,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { Bills } from "./pages/Bills";
 import { Articles } from "./pages/Articles";
 import { KnowledgeBase } from "./pages/KnowledgeBase";
+import { EnglishReading } from "./pages/EnglishReading";
 import { Layout } from "./components/Layout";
 
 export const router = createBrowserRouter([
@@ -14,6 +15,7 @@ export const router = createBrowserRouter([
       { path: "bills", Component: Bills },
       { path: "articles", Component: Articles },
       { path: "knowledge", Component: KnowledgeBase },
+      { path: "english-reading", Component: EnglishReading },
     ],
   },
 ]);

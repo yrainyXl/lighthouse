@@ -34,6 +34,8 @@ npm install
 # Notion API配置
 NOTION_API_KEY=your_notion_api_key
 NOTION_DATABASE_ID=your_notion_database_id
+# 英语阅读同步（可选，不填则回落到 NOTION_DATABASE_ID）
+NOTION_ENGLISH_DATABASE_ID=your_english_reading_database_id
 
 # AI API配置
 AI_API_KEY=your_ai_api_key
@@ -155,6 +157,7 @@ docker compose up --build -d
   - `ledger_aggregation_daily`：按天的聚合与 AI 总结
 - API 缓存策略：
   - `POST /api/notion/query-ledger`：默认先读缓存，`forceRefresh=true` 强制回源 Notion
+  - `POST /api/notion/english-reading/sync`：把英语阅读文章、生词和句子同步到 Notion（需数据库含 `Title/Source/Level/Date/Tags` 字段）
   - `POST /api/ledger/analyze`：默认先读当日聚合缓存，`forceRefresh=true` 强制重算
 
 ### 定时任务配置

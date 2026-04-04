@@ -71,7 +71,7 @@ export function Bills() {
     new Date().getMonth() + 1,
   ).padStart(2, "0")}`;
 
-  const [viewMode, setViewMode] = useState<ViewMode>("month");
+  const [viewMode, setViewMode] = useState<ViewMode>("day");
   const [selectedDate, setSelectedDate] = useState(today);
   const [weekOption, setWeekOption] = useState<RangePreset>("thisWeek");
   const [monthOption, setMonthOption] = useState<RangePreset>("thisMonth");

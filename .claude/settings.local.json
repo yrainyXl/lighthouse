@@ -12,7 +12,10 @@
       "Bash(find /Users/EDY -maxdepth 5 -name *.ts -path */notion*)",
       "Bash(npm show:*)",
       "Bash(node -e \"const v=JSON.parse\\(require\\(''''fs''''\\).readFileSync\\(''''/dev/stdin'''',''''utf8''''\\)\\); console.log\\(v.filter\\(x=>x.startsWith\\(''''2.''''\\)\\).slice\\(-5\\).join\\(''''\\\\n''''\\)\\)\")",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Read(//Users/EDY/**)",
+      "Read(//Users/EDY/lumora-project-lighthouse/**)",
+      "Bash(git -C /Users/EDY/lumora/project/lighthouse log --oneline -15)"
     ]
   }
 }

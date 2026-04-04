@@ -1,6 +1,13 @@
 services:
   lighthouse:
-    build: .
+    build:
+      context: .
+      args:
+        NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmjs.org/}
+        HTTP_PROXY: ${DOCKER_HTTP_PROXY:-http://host.docker.internal:7897}
+        HTTPS_PROXY: ${DOCKER_HTTPS_PROXY:-http://host.docker.internal:7897}
+        NO_PROXY: ${DOCKER_NO_PROXY:-localhost,127.0.0.1,host.docker.internal}
+        ALL_PROXY: ${DOCKER_ALL_PROXY:-}
     container_name: lighthouse
     ports:
       - "8787:8787"
@@ -11,7 +18,10 @@ services:
       SQLITE_DB_PATH: /app/server/data/lighthouse.db
       AI_API_BASE: ${AI_API_BASE:-https://api.siliconflow.cn/v1}
       AI_MODEL: ${AI_MODEL:-Qwen/Qwen2.5-7B-Instruct}
+      HTTP_PROXY: ${DOCKER_HTTP_PROXY:-http://host.docker.internal:7897}
+      HTTPS_PROXY: ${DOCKER_HTTPS_PROXY:-http://host.docker.internal:7897}
+      NO_PROXY: ${DOCKER_NO_PROXY:-localhost,127.0.0.1,host.docker.internal}
+      ALL_PROXY: ${DOCKER_ALL_PROXY:-}
     volumes:
       - ./server/data:/app/server/data
     restart: unless-stopped
-

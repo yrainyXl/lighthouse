@@ -58,6 +58,17 @@ SQLITE_DB_PATH=server/data/lighthouse.db
 
 # 应用配置
 VITE_APP_TITLE=个人门户网站
+
+# Docker 构建依赖源（可选）
+# 默认使用官方 npm 源；如果你的网络环境需要镜像，可以改成其他 registry
+NPM_REGISTRY=https://registry.npmjs.org/
+
+# Docker/OrbStack 代理（可选）
+# 容器里不要写 127.0.0.1，应使用 host.docker.internal 指向宿主机代理
+DOCKER_HTTP_PROXY=http://host.docker.internal:7897
+DOCKER_HTTPS_PROXY=http://host.docker.internal:7897
+DOCKER_NO_PROXY=localhost,127.0.0.1,host.docker.internal
+DOCKER_ALL_PROXY=
 ```
 
 ### 3. 启动开发服务器

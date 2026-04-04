@@ -1,34 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  BookText,
   Brain,
   Check,
   Languages,
-  Radio,
-  ScrollText,
   Sparkles,
   Type,
   UploadCloud,
 } from "lucide-react";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import {
   syncEnglishReading,
   type ReadingArticle,
 } from "../services/englishReadingApi";
-
-const AUTO_PULL_SOURCES = [
-  { name: "News API", status: "connected", cadence: "每 30 分钟" },
-  { name: "VOA Learning English RSS", status: "connected", cadence: "每 60 分钟" },
-  { name: "BBC Learning English RSS", status: "connected", cadence: "每 60 分钟" },
-];
 
 const ARTICLE_POOL: ReadingArticle[] = [
   {
@@ -78,7 +64,6 @@ export function EnglishReading() {
     if (storedWords) {
       setSavedWords(JSON.parse(storedWords));
     }
-
     if (storedSentences) {
       setSavedSentences(JSON.parse(storedSentences));
     }
@@ -190,7 +175,7 @@ export function EnglishReading() {
     return (
       <div
         key={`${activeArticle?.id}-${index}`}
-        className="space-y-3 rounded-3xl border border-slate-200 bg-slate-50 p-4"
+        className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-4"
       >
         <p className="text-[15px] leading-8 text-slate-800">
           {words.map((token, tokenIndex) => {
@@ -223,259 +208,185 @@ export function EnglishReading() {
   };
 
   return (
-    <div className="space-y-6 pb-24 sm:pb-8">
-      <section className="rounded-[30px] border border-slate-200 bg-white/85 p-5 shadow-[0_20px_60px_-40px_rgba(15,23,42,0.35)] backdrop-blur sm:p-6">
-        <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-          <div>
-            <Badge className="rounded-full bg-slate-950 text-white hover:bg-slate-950">
-              Remote 能力已并入
-            </Badge>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950">
-              英语阅读训练
-            </h2>
-            <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
-              自动拉取文章、词句收藏、AI 精读和 Notion 同步都收口到同一套移动优先页面里。
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button
-                variant="outline"
-                className="rounded-full"
-                onClick={readSelection}
-              >
-                <Type className="h-4 w-4" />
-                添加选中文本
-              </Button>
-              <Button
-                variant="outline"
-                className="rounded-full"
-                onClick={() => setShowDeepReading((current) => !current)}
-              >
-                <Brain className="h-4 w-4" />
-                {showDeepReading ? "收起 AI 精读" : "生成 AI 精读"}
-              </Button>
-              <Button
-                className="rounded-full bg-slate-950 hover:bg-slate-800"
-                onClick={handleSync}
-                disabled={syncing}
-              >
-                <UploadCloud className="h-4 w-4" />
-                {syncing ? "同步中…" : "同步到 Notion"}
-              </Button>
-            </div>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-            {AUTO_PULL_SOURCES.map((source) => (
-              <div
-                key={source.name}
-                className="rounded-3xl border border-slate-200 bg-slate-50 p-4"
-              >
-                <p className="text-sm font-medium text-slate-950">
-                  {source.name}
-                </p>
-                <p className="mt-1 text-xs text-slate-600">
-                  同步频率：{source.cadence}
-                </p>
-                <p className="mt-3 inline-flex items-center gap-1 text-xs text-emerald-700">
-                  <Radio className="h-3.5 w-3.5" />
-                  {source.status}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+    <div className="space-y-4 pb-24">
+      <section>
+        <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
+          英语阅读
+        </h2>
+        <p className="mt-1 text-sm text-slate-500">读文章，收藏词句，按需同步。</p>
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-[310px_1fr]">
-        <Card className="border-white/70 bg-white/85 xl:sticky xl:top-28 xl:h-fit">
-          <CardHeader>
-            <CardTitle className="text-base">文章池</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="搜索标题或主题"
-            />
-            <div className="space-y-2">
-              {filteredArticles.map((article) => (
-                <button
-                  key={article.id}
-                  type="button"
-                  onClick={() => setActiveArticleId(article.id)}
-                  className={`w-full rounded-2xl border p-4 text-left transition ${
-                    activeArticle?.id === article.id
-                      ? "border-slate-950 bg-slate-950 text-white"
-                      : "border-slate-200 bg-slate-50 hover:bg-white"
-                  }`}
-                >
-                  <p className="text-sm font-medium">{article.title}</p>
-                  <p
-                    className={`mt-2 text-xs ${
-                      activeArticle?.id === article.id
-                        ? "text-slate-300"
-                        : "text-slate-500"
-                    }`}
-                  >
-                    {article.source}
-                  </p>
-                  <div className="mt-3 flex items-center gap-2 text-xs">
-                    <Badge
-                      variant={activeArticle?.id === article.id ? "secondary" : "outline"}
+      <Card className="border-slate-200 bg-white shadow-sm">
+        <CardContent className="space-y-3 p-4">
+          <Input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="搜索标题或主题"
+          />
+          <div className="space-y-2">
+            {filteredArticles.map((article) => (
+              <button
+                key={article.id}
+                type="button"
+                onClick={() => setActiveArticleId(article.id)}
+                className={`w-full rounded-2xl border p-4 text-left transition ${
+                  activeArticle?.id === article.id
+                    ? "border-slate-950 bg-slate-950 text-white"
+                    : "border-slate-200 bg-slate-50"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="font-medium">{article.title}</p>
+                    <p
+                      className={`mt-1 text-xs ${
+                        activeArticle?.id === article.id
+                          ? "text-slate-300"
+                          : "text-slate-500"
+                      }`}
                     >
-                      {article.level}
-                    </Badge>
-                    <span>{article.publishedAt}</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {activeArticle ? (
-          <div className="space-y-4">
-            <Card className="border-white/70 bg-white/85">
-              <CardHeader>
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="max-w-3xl">
-                    <CardTitle className="text-2xl tracking-tight">
-                      {activeArticle.title}
-                    </CardTitle>
-                    <p className="mt-3 text-sm leading-7 text-slate-600">
-                      {activeArticle.summary}
+                      {article.source}
                     </p>
                   </div>
-                  <Badge className="w-fit rounded-full bg-sky-100 text-sky-800 hover:bg-sky-100">
-                    {activeArticle.topic}
-                  </Badge>
+                  <Badge variant="outline">{article.level}</Badge>
                 </div>
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {activeArticle && (
+        <>
+          <Card className="border-slate-200 bg-white shadow-sm">
+            <CardHeader>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <CardTitle className="text-xl">{activeArticle.title}</CardTitle>
+                  <p className="mt-2 text-sm leading-7 text-slate-600">
+                    {activeArticle.summary}
+                  </p>
+                </div>
+                <Badge>{activeArticle.topic}</Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {activeArticle.segments.map(renderInteractiveSegment)}
+            </CardContent>
+          </Card>
+
+          <Card className="border-slate-200 bg-white shadow-sm">
+            <CardContent className="space-y-3 p-4">
+              <div className="grid gap-2 sm:grid-cols-3">
+                <Button variant="outline" onClick={readSelection}>
+                  <Type className="h-4 w-4" />
+                  添加选中文本
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowDeepReading((current) => !current)}
+                >
+                  <Brain className="h-4 w-4" />
+                  {showDeepReading ? "收起精读" : "显示精读"}
+                </Button>
+                <Button onClick={handleSync} disabled={syncing}>
+                  <UploadCloud className="h-4 w-4" />
+                  {syncing ? "同步中…" : "同步 Notion"}
+                </Button>
+              </div>
+
+              <div className="flex gap-2">
+                <Input
+                  value={customSentence}
+                  onChange={(event) => setCustomSentence(event.target.value)}
+                  placeholder="手动添加句子"
+                />
+                <Button onClick={addCustomSentence}>保存</Button>
+              </div>
+
+              {syncMessage && (
+                <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                  {syncMessage}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {showDeepReading && (
+            <Card className="border-violet-200 bg-violet-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base text-violet-950">
+                  <Sparkles className="h-4 w-4" />
+                  精读提示
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                {activeArticle.segments.map(renderInteractiveSegment)}
+              <CardContent className="space-y-3 text-sm leading-7 text-violet-950/90">
+                <p>{activeArticle.summary}</p>
+                <p>
+                  重点句：“{activeArticle.segments[1]}”
+                </p>
+                <p>练习：请用 2 句话复述本文。</p>
+              </CardContent>
+            </Card>
+          )}
+
+          <div className="grid gap-3 md:grid-cols-2">
+            <Card className="border-slate-200 bg-white shadow-sm">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Languages className="h-4 w-4" />
+                  生词
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {savedWords.length === 0 ? (
+                  <p className="text-sm text-slate-500">点击正文单词即可收藏。</p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {savedWords.slice(0, 30).map((word) => (
+                      <Badge
+                        key={word}
+                        variant="outline"
+                        className="cursor-pointer rounded-full bg-slate-50"
+                        onClick={() => toggleWord(word)}
+                      >
+                        {word}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
 
-            <div className="grid gap-4 lg:grid-cols-2">
-              <Card className="border-white/70 bg-white/85">
-                <CardHeader>
-                  <CardTitle className="text-base">句子收藏</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex gap-2">
-                    <Input
-                      value={customSentence}
-                      onChange={(event) => setCustomSentence(event.target.value)}
-                      placeholder="手动添加句子"
-                    />
-                    <Button onClick={addCustomSentence}>保存</Button>
+            <Card className="border-slate-200 bg-white shadow-sm">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Check className="h-4 w-4" />
+                  句子
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {savedSentences.length === 0 ? (
+                  <p className="text-sm text-slate-500">
+                    点击收藏整句或添加选中文本。
+                  </p>
+                ) : (
+                  <div className="space-y-2">
+                    {savedSentences.slice(0, 8).map((sentence) => (
+                      <div
+                        key={sentence}
+                        className="rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700"
+                      >
+                        {sentence}
+                      </div>
+                    ))}
                   </div>
-                  {syncMessage && (
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-                      {syncMessage}
-                    </div>
-                  )}
-                  {savedSentences.length === 0 ? (
-                    <p className="text-sm text-slate-500">
-                      点击“收藏整句”或选中文本后添加。
-                    </p>
-                  ) : (
-                    <div className="space-y-2">
-                      {savedSentences.slice(0, 8).map((sentence) => (
-                        <div
-                          key={sentence}
-                          className="rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700"
-                        >
-                          {sentence}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card className="border-white/70 bg-white/85">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-base">
-                    <Languages className="h-4 w-4" />
-                    生词本
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {savedWords.length === 0 ? (
-                    <p className="text-sm text-slate-500">
-                      点击正文中的单词即可收藏。
-                    </p>
-                  ) : (
-                    <div className="flex flex-wrap gap-2">
-                      {savedWords.slice(0, 30).map((word) => (
-                        <Badge
-                          key={word}
-                          variant="outline"
-                          className="cursor-pointer rounded-full bg-slate-50"
-                          onClick={() => toggleWord(word)}
-                        >
-                          {word}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
-            {showDeepReading && (
-              <Card className="border-violet-200 bg-violet-50/80">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-base text-violet-950">
-                    <Sparkles className="h-4 w-4" />
-                    AI 精读卡
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 text-sm leading-7 text-violet-950/90">
-                  <div>
-                    <p className="font-semibold">1) 主旨</p>
-                    <p>{activeArticle.summary}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold">2) 难句拆解</p>
-                    <p>
-                      “{activeArticle.segments[1]}” 这一句可以提炼成
-                      “If..., ... will ...” 模板，重点观察条件与结果之间的连接方式。
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-semibold">3) 练习</p>
-                    <p>
-                      请用 2 句话复述本文，并使用 consistency / exposure 两个词。
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                )}
+              </CardContent>
+            </Card>
           </div>
-        ) : (
-          <Card className="border-white/70 bg-white/85">
-            <CardContent className="p-8 text-center text-sm text-slate-500">
-              当前没有匹配文章。
-            </CardContent>
-          </Card>
-        )}
-      </section>
-
-      <div className="fixed inset-x-0 bottom-4 z-40 px-4 sm:hidden">
-        <div className="mx-auto flex max-w-md items-center gap-2 rounded-3xl border border-white/50 bg-white/90 p-3 shadow-[0_25px_60px_-35px_rgba(15,23,42,0.5)] backdrop-blur">
-          <Button variant="outline" className="flex-1" onClick={readSelection}>
-            <Check className="h-4 w-4" />
-            保存选中文本
-          </Button>
-          <Button className="flex-1 bg-slate-950 hover:bg-slate-800" onClick={() => setShowDeepReading(true)}>
-            <BookText className="h-4 w-4" />
-            AI 精读
-          </Button>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }
